@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
 
         var form = new FormData($('#myform')[0]);
-       // document.getElementById("album").innerHTML = null;
+     //   document.getElementById("album").innerHTML = null;
 
         $.ajax({
             url:'image_send.php',
@@ -58,13 +58,11 @@ function imgclick(ea) {
   if($('#al').length>0)
   {
 
-   //   $('#al').remove();
-
-      uploadimg(ea);
+    $('#album').remove();
+     uploadimg(ea);
   }
     else
   {
-
       uploadimg(ea);
   }
 }
@@ -72,25 +70,17 @@ function imgclick(ea) {
 function uploadimg(ea)
 {
 
-    $('#myform').append("<div id='al'>");
-    $('#al').append("<div id='album'>");
+    var imgNm = ea.id;
     document.getElementById("content_here_please").innerHTML = null;
 
 
-    var imgNm = ea.id;
-    $('#banner-slide').bjqs({
-        animtype      : 'slide',
-        height        : 320,
-        width         : 620,
-        responsive    : true,
-        randomstart   : true
-    });
 
     $.ajax({
         url:'loadAlbum.php',
         success:function (data) {
             console.log(data);
 
+            $('#al').append("<div id='album'>");
             $("#album").append("<div id='banner-slide'><ul class='bjqs' id='lol'>");
             $.each(data, function (key, value) {
                 var url = "upload/" + imgNm + "/" + value;
@@ -98,14 +88,24 @@ function uploadimg(ea)
 
             });
             $("#album").append("</ul></div>");
+
+            $('#banner-slide').bjqs({
+                animtype      : 'slide',
+                height        : 320,
+                width         : 620,
+                responsive    : true,
+                randomstart   : true
+            });
         },
         data:{imageNm:ea.id
         },
         cache:false,
         dataType:'json'
     });
+
+
+
+
 }
-
-
 
 
