@@ -20,7 +20,7 @@ $(document).ready(function () {
         }
 
         var form = new FormData($('#myform')[0]);
-        document.getElementById("album").innerHTML = null;
+       // document.getElementById("album").innerHTML = null;
 
         $.ajax({
             url:'image_send.php',
