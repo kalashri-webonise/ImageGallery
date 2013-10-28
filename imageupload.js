@@ -7,20 +7,21 @@
  */
 
 $(document).ready(function () {
-    $('body').on('click', '.upload', function () {
+    $('#uploadImg').on('click', function () {
 
         if (document.getElementById("unm").value == null || document.getElementById("unm").value == '') {
             alert("Please enter album name");
-            exit;
+            return false;
+
         }
         if (document.getElementById("image").value == null || document.getElementById("image").value == '') {
             alert("Please choose image to upload");
-            exit;
+            return false;
 
         }
 
         var form = new FormData($('#myform')[0]);
-        document.getElementById("album").innerHTML = null;
+        document.getElementById("al").innerHTML = null;
 
         $.ajax({
             url:'image_send.php',
@@ -55,57 +56,192 @@ function progress(e) {
 
 
 function imgclick(ea) {
-  if($('#al').length>0)
-  {
+    if ($('#al').length > 0) {
 
-   //   $('#al').remove();
-
-      uploadimg(ea);
-  }
-    else
-  {
-
-      uploadimg(ea);
-  }
+        $('#album').remove();
+        uploadimg(ea);
+    }
+    else {
+        uploadimg(ea);
+    }
 }
 
-function uploadimg(ea)
-{
+function uploadimg(ea) {
 
-    $('#myform').append("<div id='al'>");
-    $('#al').append("<div id='album'>");
+    var imgNm = ea.id;
     document.getElementById("content_here_please").innerHTML = null;
 
 
-    var imgNm = ea.id;
-    $('#banner-slide').bjqs({
-        animtype      : 'slide',
-        height        : 320,
-        width         : 620,
-        responsive    : true,
-        randomstart   : true
-    });
 
+
+}
+
+function deletealbumNm(im, alb, albnm) {
+    var albumId = alb;
+    var albname = albnm;
+    var viewid = im.id;
+    var status = confirm("Are you sure you want to delete Album ?");
+    if (status == true) {
+
+        $.ajax({
+            type:"POST",
+            url:"loadAlbum.php",
+            success:function (data) {
+                alert("Album is deleted successfully");
+                location.reload();
+            },
+            data:{view:viewid, alid:albumId, albnm:albname},
+
+            cache:false
+        });
+    }
+}
+
+function editalbumNm(im, alb, albnm) {
+    var albumId = alb;
+    var albname = albnm;
+    var viewid = im.id;
+
+    var a = albnm.trim() + 'edit';
+    var updateAlbumNm = document.getElementById(a).value;
+    var editstring = a.trim();
     $.ajax({
-        url:'loadAlbum.php',
+        type:"POST",
+        url:"loadAlbum.php",
         success:function (data) {
-            console.log(data);
-
-            $("#album").append("<div id='banner-slide'><ul class='bjqs' id='lol'>");
-            $.each(data, function (key, value) {
-                var url = "upload/" + imgNm + "/" + value;
-                $("#lol").append("<li><img id='value' style='margin: 0 0 0 5px;' src=' "+ url +" '/></li>");
-
-            });
-            $("#album").append("</ul></div>");
+            alert(data);
+            location.reload();
         },
-        data:{imageNm:ea.id
-        },
-        cache:false,
-        dataType:'json'
+        data:{idedit:viewid, albumid:albumId, albumnm:albname, updatedName:updateAlbumNm},
+
+        cache:false
     });
 }
 
+$( ".view" ).on( "click",viewalbumNm);
+function viewalbumNm(im, albId, albnm) {
+
+    if ($('#main').length > 0) {
+        $('#section').remove();
+    }
+
+    if ($('#all').length > 0) {
+        $('#all').find('div').first().remove();
+        $('#foo3').remove();
+        $('#cl').remove();
+        $('#prev3').remove();
+        $('#next3').remove();
+        $('#pager3').remove();
+        $('#lbl').remove();
+        var albumView = albId;
+    }
+        $.ajax({
+            type:"POST",
+            url:"loadAlbum.php",
+            success:function (data) {
+                //  console.log(data);
+                $("#all").append("<header style='background: linear-gradient(45deg, #020031 0%, #6D3353 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);'><label align='left' id='lbl'><h3 style='color:#ffffff' align='center'>Album Name :"+albnm+"</h3></label></header>");
+                $('#all').append("<ul id='foo3' style='width:500px;'>");
+
+                $.each(data, function (key, value) {
+                    var ur = albnm.trim();
+                    var url = "upload/" + ur + "/tmb/" + value;
+                    var val = 'deleteImg' + value;
+
+                    $("#foo3").append("<li><img id='" + val + "' style='margin: 0 0 0 5px;' src=' " + url + " '/><br/><input id='" + value + "' name='" + albnm + "'  value='Delete'  onclick='deleteImg(this," + albumView + ");' type='button'/></li>");
+
+
+                });
+                $("#all").append("<div class='clearfix' id='cl'></div><a id='prev3' class='prev' href='#'>&lt;</a><a id='next3' class='next' href='#'>&gt;</a><div id='pager3' class='pager'></div>");
+
+                $('#foo3').carouFredSel({
+                    auto:false,
+                    prev:'#prev3',
+                    next:'#next3',
+                    pagination:"#pager3",
+                    mousewheel:true,
+                    swipe:{
+                        onMouse:true,
+                        onTouch:true
+                    }
+                });
+            },
+            data:{albumIdView:albumView},
+            dataType:'json',
+            cache:false
+        });
+
+     //   viewa(im, albId, albnm);
 
 
 
+
+}
+
+
+function deleteImg(ek, idalImg) {
+    var alimgid = ek.id;
+    var ekname = ek.name;
+    var alname = ekname.trim();
+    var status = confirm("Are you sure you want to delete Image ?");
+    if (status == true) {
+
+        $.ajax({
+            type:"POST",
+            url:"loadAlbum.php",
+            success:function (data) {
+                alert("Image is deleted successfully");
+           location.reload();
+
+            },
+            data:{imNm:alimgid, imgalid:idalImg, nm:alname},
+
+            cache:false
+        });
+    }
+}
+
+
+function opengallery(im,imid,alb) {
+    if ($('#main').length > 0) {
+
+        $('#section').remove();
+        opengall(im,imid,alb);
+    }
+    else {
+        opengall(im,imid,alb);
+    }
+}
+
+function opengall(im,imid,alb)
+{
+    $.ajax({
+    type:"POST",
+        url:"loadAlbum.php",
+    success:function (data) {
+      console.log(data);
+
+         $('#main').append("<section class='slider' id='section' style='width:500px;'><div class='flexslider'  style='width:500px;margin-left:500px;'><ul class='slides' id='sli'>");
+        $.each(data, function (key, value) {
+            var url = "upload/" + alb + "/" + value;
+            var urtmb="upload/"+alb+"/tmb/"+value;
+            $('#sli').append("<li data-thumb='"+urtmb+"'><img src='"+url+"' /></li>");
+
+
+        });
+        $('#main').append("</ul></div></section>");
+
+            $('.flexslider').flexslider({
+                animation: "slide",
+                controlNav: "thumbnails",
+                start: function(slider){
+                    $('body').removeClass('loading');
+                }
+            });
+
+    },
+    data:{albumIdV:imid},
+    dataType:'json',
+        cache:false
+});
+}
