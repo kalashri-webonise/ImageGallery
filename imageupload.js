@@ -107,7 +107,11 @@ function uploadimg(ea)
         console.warning("THis is demo function");
     }
 
-
+    function add() {
+        var a,b;
+        var addition = a+b;
+        return addition;
+    }
 }
 
 
