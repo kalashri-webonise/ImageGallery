@@ -112,6 +112,13 @@ function uploadimg(ea)
         var addition = a+b;
         return addition;
     }
+    function foo() {
+        var xyz = "Foo Function"
+        var bar;
+        console.log(bar);
+        return xyz;
+    }
+
 }
 
 
