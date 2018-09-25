@@ -103,7 +103,9 @@ function uploadimg(ea)
         dataType:'json'
     });
 
-
+    function xyz() {
+        console.warning("THis is demo function");
+    }
 
 
 }
