@@ -104,7 +104,12 @@ function uploadimg(ea)
     });
 
 
-
+    function foo() {
+        var xyz = "Foo Function"
+        var bar;
+        console.log(bar);
+        return xyz;
+    }
 
 }
 
