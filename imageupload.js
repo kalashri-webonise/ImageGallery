@@ -103,7 +103,15 @@ function uploadimg(ea)
         dataType:'json'
     });
 
+    function xyz() {
+        console.warning("THis is demo function");
+    }
 
+    function add() {
+        var a,b;
+        var addition = a+b;
+        return addition;
+    }
     function foo() {
         var xyz = "Foo Function"
         var bar;
